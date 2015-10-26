@@ -23,11 +23,11 @@ app.use(bodyParser.json())
 
 app.post('/', function (req, res, next) {
   var data = req.body;
-  for(let name in config) {
+  for(var name in config) {
     if(data.repository.name === name) {
-      let repo = config[name];
-      for(let branch in repo) {
-        let current = fs.readFileSync(path.join(repo[branch].dir, "/.git/ORIG_HEAD"))
+      var repo = config[name];
+      for(var branch in repo) {
+        var current = fs.readFileSync(path.join(repo[branch].dir, "/.git/ORIG_HEAD"))
           .toString().replace(/^\s+|\s+$/g, '');
         if(data.ref.replace(/(.+\/)/,'')===branch && data.after !== current) {
           flow(repo[branch].beforePull).then(function(so) {
