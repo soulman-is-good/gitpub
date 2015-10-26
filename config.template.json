@@ -1,0 +1,17 @@
+{
+  "myrepo-name-as-is": {
+    "branch-name-for-example-master": {
+      "dir": "/home/user/myrepo-to-publish/",
+      "beforePull": [],
+      "afterPull": [
+        ["npm install", "bower install"],
+        ["gulp", "pm2 restart all"]
+      ]
+    }
+  },
+  "myotherrepo": {
+    "master": {},
+    "dev": {},
+    "RC": {}
+  }
+}

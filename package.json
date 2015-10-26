@@ -1,0 +1,18 @@
+{
+  "name": "gitpub",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "nohup node app.js > \"$HOME/gitpub.log\" 2>&1 &",
+    "stop": "kill `ps afx | grep gitpub | tail -1 | awk '{print $1}'`",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.14.1",
+    "express": "^4.13.3",
+    "node-defer": "^1.0.1"
+  }
+}
