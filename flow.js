@@ -1,4 +1,5 @@
 var exec = require('child_process').exec;
+var util = require('util');
 var Defer = require('node-defer');
 var waterfall = require('./waterfall');
 
@@ -11,7 +12,7 @@ function after(count, cb) {
   };
 }
 
-function flow(cmds, cb) {
+function flow(cmds, dir, cb) {
   var defer = new Defer();
   var next = waterfall();
   var stdout = '';
@@ -30,7 +31,7 @@ function flow(cmds, cb) {
         }
         var done = after(cmds.length, next);
         for(var i in cmds) {
-          exec(cmds[i], function(err, so, se) {
+          exec(util.format('cd "%s" && %s', dir, cmds[i]), function(err, so, se) {
             if(err) {
               defer.reject(err);
               cb && cb(err);
