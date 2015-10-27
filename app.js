@@ -3,7 +3,7 @@
 process.title = "gitpub";
 
 var fs = require('fs');
-var path = require('path');
+var execSync = require('child_process').execSync;
 var express = require('express');
 var bodyParser = require('body-parser');
 var flow = require('./flow');
@@ -25,7 +25,7 @@ app.post('/', function (req, res, next) {
       if(data.repository.name === name) {
         var repo = config[name];
         for(var branch in repo) {
-          var current = fs.readFileSync(path.join(repo[branch].dir, "/.git/ORIG_HEAD"))
+          var current = execSync('cd "' + repo[branch].dir '" && git rev-parse HEAD')
             .toString().replace(/^\s+|\s+$/g, '');
           if(data.ref.replace(/(.+\/)/,'')===branch && data.after !== current) {
             flow(repo[branch].beforePull, repo[branch].dir).then(function(so) {
