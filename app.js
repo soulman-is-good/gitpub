@@ -25,7 +25,7 @@ app.post('/', function (req, res, next) {
       if(data.repository.name === name) {
         var repo = config[name];
         for(var branch in repo) {
-          var current = execSync('cd "' + repo[branch].dir '" && git rev-parse HEAD')
+          var current = execSync('cd "' + repo[branch].dir + '" && git rev-parse HEAD')
             .toString().replace(/^\s+|\s+$/g, '');
           if(data.ref.replace(/(.+\/)/,'')===branch && data.after !== current) {
             flow(repo[branch].beforePull, repo[branch].dir).then(function(so) {
