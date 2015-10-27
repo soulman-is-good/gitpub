@@ -28,30 +28,32 @@ app.post('/', function (req, res, next) {
           var current = execSync('cd "' + repo[branch].dir + '" && git rev-parse HEAD')
             .toString().replace(/^\s+|\s+$/g, '');
           if(data.ref.replace(/(.+\/)/,'')===branch && data.after !== current) {
-            flow(repo[branch].beforePull, repo[branch].dir).then(function(so) {
-              so && console.log(so);
-              flow("git pull", repo[branch].dir, function(err, so){
-                if(err) {
-                  console.log("=====================================");
-                  console.log(new Date());
-                  console.error(err);
-                } else {
-                  flow(repo[branch].afrerPull, repo[branch].dir).then(function(so){
-                    console.log("=====================================");
-                    console.log(new Date(), name + "::" + branch, "DONE!");
-                  }).catch(function(err){
+            (function(branch, name, repo){
+              flow(repo[branch].beforePull, repo[branch].dir).then(function(so) {
+                so && console.log(so);
+                flow("git pull", repo[branch].dir, function(err, so){
+                  if(err) {
                     console.log("=====================================");
                     console.log(new Date());
-                    console.error(err || se);
-                    flow("git reset " + current, repo[branch].dir);
-                  });
-                }
+                    console.error(err);
+                  } else {
+                    flow(repo[branch].afrerPull, repo[branch].dir).then(function(so){
+                      console.log("=====================================");
+                      console.log(new Date(), name + "::" + branch, "DONE!");
+                    }).catch(function(err){
+                      console.log("=====================================");
+                      console.log(new Date());
+                      console.error(err || se);
+                      flow("git reset " + current, repo[branch].dir);
+                    });
+                  }
+                });
+              }).catch(function(err){
+                console.log("=====================================");
+                console.log(new Date());
+                console.error(err);
               });
-            }).catch(function(err){
-              console.log("=====================================");
-              console.log(new Date());
-              console.error(err);
-            });
+            }(branch, name, repo));
           } else {
             console.log("=====================================");
             console.log(new Date(), name + "::" + branch, 'Up to date');
