@@ -6,14 +6,15 @@ var fs = require('fs');
 var execSync = require('child_process').execSync;
 var express = require('express');
 var bodyParser = require('body-parser');
-var flow = require('./flow');
+var flow = require('./lib/flow');
 var app = express();
 var config = {};
+var config_file = process.env.GITPUB_CONFIG || __dirname + '/config.json';
 
-if(!fs.existsSync('./config.json')) {
+if(!fs.existsSync(config_file)) {
   throw new Error('You must create config.json. You may use config.template.json for start');
 }
-config = require('./config.json');
+config = require(config_file);
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
