@@ -8,8 +8,8 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var flow = require('./lib/flow');
 var app = express();
-var config = {};
 var config_file = process.env.GITPUB_CONFIG || __dirname + '/config.json';
+var config = {};
 
 if(!fs.existsSync(config_file)) {
   throw new Error('You must create config.json. You may use config.template.json for start');
