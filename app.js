@@ -38,14 +38,14 @@ app.post('/', function (req, res, next) {
                     console.log(new Date());
                     console.error(err);
                   } else {
-                    flow(repo[branch].afrerPull, repo[branch].dir).then(function(so){
+                    flow(repo[branch].afterPull, repo[branch].dir).then(function(so){
                       console.log("=====================================");
                       console.log(new Date(), name + "::" + branch, "DONE!");
                     }).catch(function(err){
                       console.log("=====================================");
                       console.log(new Date());
                       console.error(err || se);
-                      flow("git reset " + current, repo[branch].dir);
+                      flow("git reset --hard " + current, repo[branch].dir);
                     });
                   }
                 });
