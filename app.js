@@ -30,17 +30,23 @@ app.post('/', function (req, res, next) {
             .toString().replace(/^\s+|\s+$/g, '');
           var remote_branch, remote_commit, message;
           //get branch name (github/bitbucket)
-          if(data.ref) {
+          if (data.ref) {
             remote_branch = data.ref.replace(/(.+\/)/, '');
             remote_commit = data.commits[0].id;
             message = data.commits[0].message;
           }
-          if(data.push && data.push.changes && data.push.changes.length > 0  && data.push.changes[0].new && data.push.changes[0].new.type === "branch") {
+          //stash/bitbucket server
+          if (data.changesets && data.changesets.values && data.refChanges) {
+            remote_branch = data.refChanges[0].refId.replace(/(.+\/)/, '');
+            remote_commit = data.changesets.values[0].toCommit.id;
+            message = data.changesets.values[0].toCommit.message;
+          }
+          if (data.push && data.push.changes && data.push.changes.length > 0  && data.push.changes[0].new && data.push.changes[0].new.type === "branch") {
             remote_branch = data.push.changes[0].new.name;
             remote_commit = data.push.changes[0].new.target.hash;
             message = data.push.changes[0].new.target.message;
           }
-          if(remote_branch===branch && remote_commit !== current) {
+          if (remote_branch===branch && remote_commit !== current) {
             (function(branch, name, repo){
               flow(repo[branch].beforePull, repo[branch].dir).then(function(so) {
                 so && console.log(so);
